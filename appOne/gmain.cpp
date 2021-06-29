@@ -36,7 +36,7 @@ void gmain() {
         image(img, u[i].px, u[i].py);
         }
     }
-}
+}//
 
 
 
