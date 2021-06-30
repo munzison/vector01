@@ -13,30 +13,35 @@ void gmain() {
     angleMode(DEGREES);
     rectMode(CENTER);
     while (notQuit) {
-        int i = 1;
         clear(200, 200, 0);
-
         if (isTrigger(MOUSE_LBUTTON)) {
-            if (u[i].hp == 0) {//画面の外に出たら実行
-                u[i].hp = 1;
-                u[i].px = mouseX;
-                u[i].py = mouseY;
-                u[i].vx = 0;
-                u[i].vy = 10;
+            for (int i = 0; i < num; i++) {
+                if (u[i].hp == 0) {//画面の外に出たら実行
+                    u[i].hp = 1;
+                    u[i].px = mouseX;
+                    u[i].py = mouseY;
+                    u[i].vx = 0;
+                    u[i].vy = 10;
+                    i = num;//?
+                }
             }
         }
-        if (u[i].hp == 1) {
-            u[i].px += u[i].vx;
-            u[i].py += u[i].vy;
-            if (u[i].py > height + 50) {//winの高さと画像の半分の高さを足して画面の外に出たらhpを0にする
-                u[i].hp = 0;
+        for (int i = 0; i < num; i++) {
+            if (u[i].hp == 1) {
+                u[i].px += u[i].vx;
+                u[i].py += u[i].vy;
+                if (u[i].py > height + 50) {//winの高さと画像の半分の高さを足して画面の外に出たらhpを0にする
+                    u[i].hp = 0;
+                }
             }
         }
-        if (u[i].hp == 1) {
-        image(img, u[i].px, u[i].py);
+        for (int i = 0; i < num; i++) {
+            if (u[i].hp == 1) {
+                image(img, u[i].px, u[i].py);
+            }
         }
     }
-}//
+}
 
 
 
