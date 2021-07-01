@@ -4,40 +4,69 @@
 void gmain() {
     window(1000, 1000);
     int img = loadImage("assets\\unkosonomono.png");
+    int bgm = loadSound("assets\\bgm_battle02.wav");
+    int onara = loadSound("assets\\onara.wav");
+    playLoopSound(bgm);
+
     struct UNKO{
         int hp = 0;
         float px = 0, py = 0, vx = 0, vy = 0, deg = 0;
     };
     const int num = 256;
     struct UNKO u[num];
+    float deg = 0;
+    float deg2 = 0;
     angleMode(DEGREES);
     rectMode(CENTER);
     while (notQuit) {
         clear(200, 200, 0);
-        if (isTrigger(MOUSE_LBUTTON)) {
+        if (isPress(MOUSE_LBUTTON)) {
+            playSound(onara);
+            //画面に表示していないうんこを探す
+            for (int i = 0; i < num; i++) {
+                if (u[i].hp == 0) {//画面に表示していないうんこ
+                    u[i].hp = 1;
+                    u[i].px = mouseX + sin(deg) * 20;
+                    u[i].py = mouseY;
+                    u[i].vx = 0;
+                    u[i].vy = 10;
+                    u[i].deg = 0;//?
+                    deg += 6;//6度ずつずらす
+                    i = num;//?
+                }
+            }
+        }
+        //放射状に飛ばす
+        if (isPress(MOUSE_RBUTTON)) {
             for (int i = 0; i < num; i++) {
                 if (u[i].hp == 0) {//画面の外に出たら実行
                     u[i].hp = 1;
                     u[i].px = mouseX;
                     u[i].py = mouseY;
-                    u[i].vx = 0;
-                    u[i].vy = 10;
+                    u[i].vx = sin(deg2) * 5;
+                    u[i].vy = -cos(deg2) * 5;
+                    u[i].deg = deg2;//?
+                    deg2 += 25;//角度を加算
                     i = num;//?
                 }
             }
         }
+
         for (int i = 0; i < num; i++) {
             if (u[i].hp == 1) {
                 u[i].px += u[i].vx;
                 u[i].py += u[i].vy;
-                if (u[i].py > height + 50) {//winの高さと画像の半分の高さを足して画面の外に出たらhpを0にする
+                if (u[i].py > height + 50 || 
+                    u[i].py < -50 ||
+                    u[i].px > width + 50 ||
+                    u[i].px < -50) {//winの高さと画像の半分の高さ,幅を足して画面の外に出たらhpを0にする
                     u[i].hp = 0;
                 }
             }
         }
         for (int i = 0; i < num; i++) {
             if (u[i].hp == 1) {
-                image(img, u[i].px, u[i].py);
+                image(img, u[i].px, u[i].py,u[i].deg);
             }
         }
     }
